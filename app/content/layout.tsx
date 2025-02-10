@@ -20,8 +20,6 @@ export default function ContentLayout({ children }: ContentLayoutProps) {
         avatar: "https://randomuser"
     }
 
-    // some code to fetch the user
-
     return (
         <SidebarProvider>
             {userFake && <AppSidebar user={userFake} />}
