@@ -10,6 +10,7 @@ import { Icons } from "@/components/custom/icon"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import Logo from "@/components/custom/logo"
+import { signIn } from "next-auth/react"
 
 export function SignInForm({ className, ...props }: React.ComponentProps<"div">) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -68,13 +69,13 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                         </div>
                     </div>
                     <div className="grid grid-cols-3 gap-3">
-                        <Button variant="outline" className="w-full">
+                        <Button variant="outline" className="w-full" onClick={() => signIn("apple", { callbackUrl: "/content" })}>
                             <Icons.apple />
                         </Button>
-                        <Button variant="outline" className="w-full">
+                        <Button variant="outline" className="w-full" onClick={() => signIn("google", { callbackUrl: "/content" })}>
                             <Icons.google />
                         </Button>
-                        <Button variant="outline" className="w-full">
+                        <Button variant="outline" className="w-full" onClick={() => signIn("facebook", { callbackUrl: "/content" })}>
                             <Icons.meta />
                         </Button>
                     </div>
