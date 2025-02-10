@@ -5,7 +5,8 @@ import {
     SidebarProvider,
 } from "@/components/ui/sidebar"
 import { User } from "@/types";
-import { ReactNode, useState } from "react"
+import { ReactNode } from "react";
+import { useState } from "react";
 
 interface ContentLayoutProps {
     children: ReactNode
