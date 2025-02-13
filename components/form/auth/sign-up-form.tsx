@@ -17,42 +17,43 @@ import { signUpAction } from "@/app/action/auth/auth.action"
 import { useServerAction } from "zsa-react"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation"
 
-const signUpSchema = z.object({
-    username: z.string().min(2, "Username must be at least 2 characters"),
+const signUpSchema = z
+    .object({
+        username: z.string().min(2, "Username must be at least 2 characters"),
 
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-});
+        email: z.string().email("Invalid email address"),
+        password: z.string().min(8, "Password must be at least 8 characters"),
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ["confirmPassword"],
+    })
 
-type SignUpFormData = z.infer<typeof signUpSchema>;
+type SignUpFormData = z.infer<typeof signUpSchema>
 
 export function SignUpForm({ className, ...props }: React.ComponentProps<"div">) {
-    const { isPending, execute } = useServerAction(signUpAction);
-    const { toast } = useToast();
-    const router = useRouter();
-
+    const { isPending, execute } = useServerAction(signUpAction)
+    const { toast } = useToast()
+    const router = useRouter()
 
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<SignUpFormData>({
-        resolver: zodResolver(signUpSchema)
-    });
+        resolver: zodResolver(signUpSchema),
+    })
 
     const onSubmit = async (dataForm: SignUpFormData) => {
         try {
-            const { confirmPassword: _unused, ...signUpData } = dataForm;
-            void _unused; // explicitly mark as intentionally unused
+            const { confirmPassword: _unused, ...signUpData } = dataForm
+            void _unused // explicitly mark as intentionally unused
 
-            const [data, err] = await execute(signUpData);
-            console.log(data, err);
+            const [data, err] = await execute(signUpData)
+            console.log(data, err)
             if (err) {
                 toast({
                     variant: "destructive",
@@ -60,7 +61,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                     description: err.message || "Please check your information and try again.",
                     action: <ToastAction altText="Try again">Try again</ToastAction>,
                 })
-                return;
+                return
             } else {
                 toast({
                     variant: "default",
@@ -75,25 +76,24 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                 email: signUpData.email,
                 password: signUpData.password,
                 callbackUrl: "/content",
-                redirect: false
-            });
+                redirect: false,
+            })
             if (response?.error) {
                 toast({
                     variant: "destructive",
                     title: "SignIn Failed",
                     description: response.error,
                     action: <ToastAction altText="Try again">Try again</ToastAction>,
-                });
+                })
             }
             if (response?.status === 200) {
                 toast({
                     variant: "default",
                     title: "Logged in successfully",
                     description: "Welcome back!",
-                });
-                router.push("/content");
+                })
+                router.push("/content")
             }
-
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -101,9 +101,9 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                 description: "An error occurred during registration. Please check your information and try again.",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
             })
-            console.error("Error during sign up:", error);
+            console.error("Error during sign up:", error)
         }
-    };
+    }
 
     return (
         <div className={cn("w-full max-w-md mx-auto", className)} {...props}>
@@ -125,9 +125,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                                     placeholder="John Doe"
                                     className={errors.username ? "border-red-500" : ""}
                                 />
-                                {errors.username && (
-                                    <p className="text-sm text-red-500">{errors.username.message}</p>
-                                )}
+                                {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email</Label>
@@ -138,9 +136,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                                     placeholder="m@example.com"
                                     className={errors.email ? "border-red-500" : ""}
                                 />
-                                {errors.email && (
-                                    <p className="text-sm text-red-500">{errors.email.message}</p>
-                                )}
+                                {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="password">Password</Label>
@@ -150,9 +146,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                                     type="password"
                                     className={errors.password ? "border-red-500" : ""}
                                 />
-                                {errors.password && (
-                                    <p className="text-sm text-red-500">{errors.password.message}</p>
-                                )}
+                                {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="confirmPassword">Confirm Password</Label>
@@ -162,9 +156,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                                     type="password"
                                     className={errors.confirmPassword ? "border-red-500" : ""}
                                 />
-                                {errors.confirmPassword && (
-                                    <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
-                                )}
+                                {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>}
                             </div>
                         </div>
                         <Button type="submit" className="w-full" disabled={isPending}>
@@ -187,15 +179,16 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                         </div>
                     </div>
                     <div className="grid grid-cols-3 gap-3">
-                        <Button variant="outline" className="w-full" onClick={() => signIn("apple", { callbackUrl: "/content" })}>
-                            <Icons.apple />
-                        </Button>
-                        <Button variant="outline" className="w-full">
-                            <Icons.google />
-                        </Button>
-                        <Button variant="outline" className="w-full">
-                            <Icons.meta />
-                        </Button>
+                        {["apple", "google", "facebook"].map((provider) => (
+                            <Button
+                                key={provider}
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => signIn(provider, { callbackUrl: "/content" })}
+                            >
+                                <span className="h-5 w-5">{Icons[provider as keyof typeof Icons]()}</span>
+                            </Button>
+                        ))}
                     </div>
                     <p className="mt-6 text-center text-sm text-muted-foreground">
                         Already have an account?{" "}
@@ -219,5 +212,4 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
         </div>
     )
 }
-
 
