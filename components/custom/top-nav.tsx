@@ -49,7 +49,7 @@ export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] 
                 <DropdownMenu>
                     <DropdownMenuTrigger className="focus:outline-none">
                         <Image
-                            src={user?.image || "/vercel.svg"}
+                            src={user?.image || "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png"}
                             alt="User avatar"
                             width={28}
                             height={28}

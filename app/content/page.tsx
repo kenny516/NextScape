@@ -1,6 +1,5 @@
 "use client"
 import Content from '@/components/custom/content';
-import Header from '@/components/custom/header'
 import { useUserStore } from '@/stores/useUserStore';
 import { BreadcrumbItem } from '@/types';
 import { useSession } from 'next-auth/react';
@@ -14,7 +13,7 @@ export default function Page() {
 
     const { data: session } = useSession();
     const { user, setUser } = useUserStore();
-
+    console.log(session);
     useEffect(() => {
         if (session?.user && user === null) {
             setUser(session.user);

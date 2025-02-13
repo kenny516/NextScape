@@ -11,12 +11,11 @@ interface ContentLayoutProps {
 }
 
 export default function ContentLayout({ children }: ContentLayoutProps) {
-
     return (
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-                <div className=" h-full w-full">
+                <div className="h-full w-full">
                     {children}
                 </div>
             </SidebarInset>

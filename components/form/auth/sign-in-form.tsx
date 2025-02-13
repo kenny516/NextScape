@@ -1,33 +1,57 @@
 "use client"
-import { useState } from "react"
+
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import Link from "next/link"
+import { signIn } from "next-auth/react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { Loader2, Loader } from "lucide-react"
+
 import { cn } from "@/lib/utils"
+import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Icons } from "@/components/custom/icon"
-import Link from "next/link"
-import { Loader2 } from "lucide-react"
-import Logo from "@/components/custom/logo"
-import { signIn } from "next-auth/react"
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
-import { useRouter } from 'next/navigation'
+import { Icons } from "@/components/custom/icon"
+import Logo from "@/components/custom/logo"
 
 const signInSchema = z.object({
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
-});
+})
 
-type SignInFormData = z.infer<typeof signInSchema>;
+type SignInFormData = z.infer<typeof signInSchema>
 
 export function SignInForm({ className, ...props }: React.ComponentProps<"div">) {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { toast } = useToast();
-    const router = useRouter();
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [loadingProvider, setLoadingProvider] = useState<string | null>(null)
+    const { toast } = useToast()
+    const searchParams = useSearchParams()
+
+    const error = searchParams.get("error")
+
+    useEffect(() => {
+        if (error != "OAuthAccountNotLinked") {
+            console.log("error", error)
+            toast({
+                variant: "destructive",
+                title: "SignIn Failed",
+                description: error,
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
+        } else if (error === "OAuthAccountNotLinked") {
+            toast({
+                variant: "destructive",
+                title: "SignIn Failed",
+                description: "Your email is already registered with another provider.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
+        }
+    }, [error, toast])
 
 
     const {
@@ -36,45 +60,34 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
         formState: { errors },
     } = useForm<SignInFormData>({
         resolver: zodResolver(signInSchema),
-    });
+    })
 
     const onSubmit = async (data: SignInFormData) => {
-        setIsLoading(true);
+        setIsLoading(true)
         try {
-            const response = await signIn("credentials", {
-                redirect: false,
+            await signIn("credentials", {
                 ...data,
-                callbackUrl: "/content"
-            });
-            if (response?.error) {
-                toast({
-                    variant: "destructive",
-                    title: "SignIn Failed",
-                    description: response.error,
-                    action: <ToastAction altText="Try again">Try again</ToastAction>,
-                });
-            }
-            if (response?.status === 200) {
-                toast({
-                    variant: "default",
-                    title: "Logged in successfully",
-                    description: "Welcome back!",
-                });
-                router.push("/content");
-            }
+                callbackUrl: "/content",
+            })
         } catch (error: unknown) {
             toast({
                 variant: "destructive",
                 title: "SignIn Failed",
                 description: error instanceof Error ? error.message : "Please check your information and try again.",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
-            });
-            console.error(error);
+            })
+            console.error(error)
         } finally {
-            setIsLoading(false);
+            setIsLoading(false)
         }
-    };
+    }
 
+    useEffect(() => {
+        if (loadingProvider) {
+            const timer = setTimeout(() => setLoadingProvider(null), 5000) // Réinitialise après 5 secondes
+            return () => clearTimeout(timer)
+        }
+    }, [loadingProvider])
 
     return (
         <div className={cn("w-full max-w-md mx-auto", className)} {...props}>
@@ -82,7 +95,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                 <CardContent className="p-6 sm:p-8">
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="space-y-4 text-center">
-                            <Logo className="h-16flex justify-center w-full" variant="full" />
+                            <Logo className="h-16 flex justify-center w-full" variant="full" />
                             <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
                             <p className="text-sm text-muted-foreground">Login to your Acme Inc account</p>
                         </div>
@@ -96,9 +109,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                                     placeholder="m@example.com"
                                     className={errors.email ? "border-red-500" : ""}
                                 />
-                                {errors.email && (
-                                    <p className="text-sm text-red-500">{errors.email.message}</p>
-                                )}
+                                {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                             </div>
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
@@ -113,9 +124,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                                     type="password"
                                     className={errors.password ? "border-red-500" : ""}
                                 />
-                                {errors.password && (
-                                    <p className="text-sm text-red-500">{errors.password.message}</p>
-                                )}
+                                {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                             </div>
                         </div>
                         <Button type="submit" className="w-full" disabled={isLoading}>
@@ -138,15 +147,24 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                         </div>
                     </div>
                     <div className="grid grid-cols-3 gap-3">
-                        <Button variant="outline" className="w-full" onClick={() => signIn("apple", { callbackUrl: "/content" })}>
-                            <Icons.apple />
-                        </Button>
-                        <Button variant="outline" className="w-full" onClick={() => signIn("google", { callbackUrl: "/content" })}>
-                            <Icons.google />
-                        </Button>
-                        <Button variant="outline" className="w-full" onClick={() => signIn("facebook", { callbackUrl: "/content" })}>
-                            <Icons.meta />
-                        </Button>
+                        {["apple", "google", "facebook"].map((provider) => (
+                            <Button
+                                key={provider}
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => {
+                                    setLoadingProvider(provider)
+                                    signIn(provider, { callbackUrl: "/content" })
+                                }}
+                                disabled={loadingProvider !== null}
+                            >
+                                {loadingProvider === provider ? (
+                                    <Loader className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <span className="h-5 w-5">{Icons[provider as keyof typeof Icons]()}</span>
+                                )}
+                            </Button>
+                        ))}
                     </div>
                     <p className="mt-6 text-center text-sm text-muted-foreground">
                         Don&apos;t have an account?{" "}

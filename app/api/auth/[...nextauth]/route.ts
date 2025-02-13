@@ -41,6 +41,11 @@ const handler = NextAuth({
         GoogleProvider({
             clientId: process.env.AUTH_GOOGLE_ID as string,
             clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
+            authorization: {
+                params: {
+                    prompt: 'select_account',
+                },
+            }
         }),
         FacebookProvider({
             clientId: process.env.AUTH_FACEBOOK_ID as string,
