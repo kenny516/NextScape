@@ -65,7 +65,6 @@ const handler = NextAuth({
                     throw new Error("Email et mot de passe requis");
                 }
 
-                // Vérifier si l'utilisateur existe dans la base de données
                 const user = await prisma.user.findUnique({
                     where: { email: credentials.email },
                 });
@@ -80,8 +79,6 @@ const handler = NextAuth({
                 if (!isValidPassword) {
                     throw new Error("Mot de passe incorrect");
                 }
-
-                // Retourner l'utilisateur authentifié
                 return {
                     id: user.id,
                     name: user.name,
@@ -94,7 +91,8 @@ const handler = NextAuth({
         strategy: "jwt",
     },
     pages: {
-        signIn: "/auth/sign-in",
+        signIn: "/sign-in",
+        error: "/sign-in",
     },
     callbacks: {
         async signIn({ account, profile }) {

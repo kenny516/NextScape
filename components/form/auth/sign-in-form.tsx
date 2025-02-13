@@ -1,6 +1,5 @@
 "use client"
-
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,6 +13,9 @@ import { signIn } from "next-auth/react"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
+import { useSearchParams } from 'next/navigation'
 
 const signInSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -24,6 +26,10 @@ type SignInFormData = z.infer<typeof signInSchema>;
 
 export function SignInForm({ className, ...props }: React.ComponentProps<"div">) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { toast } = useToast();
+    const searchParams = useSearchParams();  // Utilise useSearchParams pour obtenir les paramètres de la requête
+
+    const error = searchParams.get("error");
 
     const {
         register,
@@ -37,11 +43,16 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
         setIsLoading(true);
         try {
             await signIn("credentials", {
-                redirect: false,
                 ...data,
                 callbackUrl: "/content"
             });
-        } catch (error) {
+        } catch (error: unknown) {
+            toast({
+                variant: "destructive",
+                title: "SignIn  Failed",
+                description: error instanceof Error ? error.message : "Please check your information and try again.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
             console.error(error);
         } finally {
             setIsLoading(false);
@@ -50,6 +61,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
 
     return (
         <div className={cn("w-full max-w-md mx-auto", className)} {...props}>
+            {error && <p className="text-red-500">{error}</p>}
             <Card className="shadow-lg">
                 <CardContent className="p-6 sm:p-8">
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

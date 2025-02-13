@@ -33,7 +33,8 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export function SignUpForm({ className, ...props }: React.ComponentProps<"div">) {
     const { isPending, execute } = useServerAction(signUpAction);
-    const { toast } = useToast()
+    const { toast } = useToast();
+
 
     const {
         register,
@@ -75,6 +76,12 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                 redirect: false
             });
         } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Registration Failed",
+                description: "An error occurred during registration. Please check your information and try again.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
             console.error("Error during sign up:", error);
         }
     };
