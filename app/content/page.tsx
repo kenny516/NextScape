@@ -24,7 +24,7 @@ export default function Page() {
 
     return (
         <div className="w-full flex flex-1 flex-col">
-            <Header breadcrumbs={breadcrumbs} titre='page' />
+            <Header breadcrumbs={breadcrumbs} />
             <div>page</div>
         </div>
     )

@@ -23,7 +23,9 @@ export default function ContentLayout({ children }: ContentLayoutProps) {
         <SidebarProvider>
             {userFake && <AppSidebar user={userFake} />}
             <SidebarInset>
-                {children}
+                <div className=" h-full w-full">
+                    {children}
+                </div>
             </SidebarInset>
         </SidebarProvider>
     )

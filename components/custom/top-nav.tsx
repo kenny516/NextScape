@@ -35,8 +35,7 @@ export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] 
             <div className="flex items-center gap-2 sm:gap-4 ml-auto sm:ml-0">
                 <Button
                     variant="outline" size="icon"
-                    type="button"
-                    className="p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-[#1F1F23] rounded-full transition-colors"
+                    className="rounded-xl"
                 >
                     <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
                 </Button>
