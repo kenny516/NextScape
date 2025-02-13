@@ -1,0 +1,12 @@
+{
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/node",
+        "config": {
+          "pnpmVersion": "9.15.4"
+        }
+      }
+    ]
+  }
+  
