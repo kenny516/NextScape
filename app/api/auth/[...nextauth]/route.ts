@@ -5,6 +5,8 @@ import FacebookProvider from "next-auth/providers/facebook";
 import InstagramProvider from "next-auth/providers/instagram";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AppleProvider from "next-auth/providers/apple";
+import { prisma } from "@/prisma/prisma";
+import { PrismaAdapter } from "@auth/prisma-adapter"
 
 declare module "next-auth" {
     interface Session {
@@ -28,26 +30,27 @@ declare module "next-auth" {
 }
 
 const handler = NextAuth({
+    adapter: PrismaAdapter(prisma),
     providers: [
         GithubProvider({
-            clientId: process.env.GITHUB_ID as string,
-            clientSecret: process.env.GITHUB_SECRET as string,
+            clientId: process.env.AUTH_GITHUB_ID as string,
+            clientSecret: process.env.AUTH_GITHUB_SECRET as string,
         }),
         GoogleProvider({
-            clientId: process.env.GOOGLE_ID as string,
-            clientSecret: process.env.GOOGLE_SECRET as string,
+            clientId: process.env.AUTH_GOOGLE_ID as string,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
         }),
         FacebookProvider({
-            clientId: process.env.FACEBOOK_ID as string,
-            clientSecret: process.env.FACEBOOK_SECRET as string,
+            clientId: process.env.AUTH_FACEBOOK_ID as string,
+            clientSecret: process.env.AUTH_FACEBOOK_SECRET as string,
         }),
         InstagramProvider({
-            clientId: process.env.INSTAGRAM_ID as string,
-            clientSecret: process.env.INSTAGRAM_SECRET as string,
+            clientId: process.env.AUTH_INSTAGRAM_ID as string,
+            clientSecret: process.env.AUTH_INSTAGRAM_SECRET as string,
         }),
         AppleProvider({
-            clientId: process.env.APPLE_ID as string,
-            clientSecret: process.env.APPLE_SECRET as string,
+            clientId: process.env.AUTH_APPLE_ID as string,
+            clientSecret: process.env.AUTH_APPLE_SECRET as string,
         }),
         CredentialsProvider({
             name: "Credentials",
@@ -61,7 +64,11 @@ const handler = NextAuth({
                     return null;
                 }
                 console.log(credentials);
-                return { id: "1", name: "Test User", email: "Test email" };
+                return {
+                    id: "1",
+                    name: credentials.username,
+                    email: credentials.email,
+                };
             }
         })
     ],
@@ -103,3 +110,4 @@ const handler = NextAuth({
 
 
 export { handler as GET, handler as POST };
+

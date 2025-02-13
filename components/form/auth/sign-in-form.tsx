@@ -11,24 +11,47 @@ import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import Logo from "@/components/custom/logo"
 import { signIn } from "next-auth/react"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+
+const signInSchema = z.object({
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+type SignInFormData = z.infer<typeof signInSchema>;
 
 export function SignInForm({ className, ...props }: React.ComponentProps<"div">) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    async function onSubmit(event: React.SyntheticEvent) {
-        event.preventDefault()
-        setIsLoading(true)
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<SignInFormData>({
+        resolver: zodResolver(signInSchema),
+    });
 
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 3000)
-    }
+    const onSubmit = async (data: SignInFormData) => {
+        setIsLoading(true);
+        try {
+            await signIn("credentials", {
+                ...data,
+                callbackUrl: "/content"
+            });
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className={cn("w-full max-w-md mx-auto", className)} {...props}>
             <Card className="shadow-lg">
                 <CardContent className="p-6 sm:p-8">
-                    <form onSubmit={onSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="space-y-4 text-center">
                             <Logo className="h-16flex justify-center w-full" variant="full" />
                             <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
@@ -37,7 +60,16 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email</Label>
-                                <Input id="email" type="email" placeholder="m@example.com" required />
+                                <Input
+                                    {...register("email")}
+                                    id="email"
+                                    type="email"
+                                    placeholder="m@example.com"
+                                    className={errors.email ? "border-red-500" : ""}
+                                />
+                                {errors.email && (
+                                    <p className="text-sm text-red-500">{errors.email.message}</p>
+                                )}
                             </div>
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
@@ -46,7 +78,15 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                                         Forgot password?
                                     </Link>
                                 </div>
-                                <Input id="password" type="password" required />
+                                <Input
+                                    {...register("password")}
+                                    id="password"
+                                    type="password"
+                                    className={errors.password ? "border-red-500" : ""}
+                                />
+                                {errors.password && (
+                                    <p className="text-sm text-red-500">{errors.password.message}</p>
+                                )}
                             </div>
                         </div>
                         <Button type="submit" className="w-full" disabled={isLoading}>
