@@ -17,13 +17,9 @@ export const signUpAction = action
             const existingUser = await prisma.user.findUnique({
                 where: { email: input.email }
             });
-
-
-
             if (existingUser) {
                 throw new Error('Email already in use.');
             }
-
             input.password = await hashPassword(input.password);
             const newUser = await prisma.user.create({
                 data: {
@@ -32,11 +28,13 @@ export const signUpAction = action
                     password: input.password,
                 }
             });
-            console.log("Nouvel utilisateur inscrit :", newUser);
             return newUser;
         } catch (error) {
-            console.error("❌ Erreur Prisma :", JSON.stringify(error, null, 2));
-            throw new Error("Erreur interne lors de la création de l'utilisateur.");
+            if (error instanceof Error) {
+                throw error;
+            } else {
+                throw new Error("Erreur interne lors de la création de l'utilisateur.");
+            }
         }
     });
 

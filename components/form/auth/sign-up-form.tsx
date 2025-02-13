@@ -50,26 +50,30 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
 
             const [data, err] = await execute(signUpData);
             console.log(data, err);
-
-
             if (err) {
                 toast({
                     variant: "destructive",
-                    title: "Uh oh! Something went wrong.",
-                    description: err.message,
+                    title: "Registration Failed",
+                    description: err.message || "Please check your information and try again.",
                     action: <ToastAction altText="Try again">Try again</ToastAction>,
-
                 })
                 return;
+            } else {
+                toast({
+                    variant: "default",
+                    title: "Registration Successful",
+                    description: "You have successfully registered.",
+                    action: <ToastAction altText="Continue">Continue</ToastAction>,
+                })
             }
 
             // Connexion automatique après l'inscription réussie
-            /*             await signIn("credentials", {
-                            email: signUpData.email,
-                            password: signUpData.password,
-                            callbackUrl: "/content",
-                            redirect: true
-                        }); */
+            await signIn("credentials", {
+                email: signUpData.email,
+                password: signUpData.password,
+                callbackUrl: "/content",
+                redirect: false
+            });
         } catch (error) {
             console.error("Error during sign up:", error);
         }
