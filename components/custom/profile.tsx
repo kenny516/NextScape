@@ -52,7 +52,7 @@ export default function Profile({
                         <AvatarImage src={avatar} alt={name} />
                         <AvatarFallback>{name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <h2 className="mt-4 text-xl sm:text-2xl font-bold text-center">{name}</h2>
+                    <h2 className="mt-4 text-lg sm:text-xl font-bold text-center">{name}</h2>
                     <p className="text-sm text-muted-foreground text-center break-all">{email}</p>
                     <Badge variant="secondary" className="mt-2">
                         {role}
