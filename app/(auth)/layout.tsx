@@ -1,4 +1,5 @@
 import { ModeToggle } from '@/components/theme/toggle-theme'
+import { Toaster } from '@/components/ui/toaster'
 import { ReactNode } from 'react'
 
 interface AuthLayoutProps {
@@ -12,6 +13,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                 <ModeToggle />
             </div>
             {children}
+            <Toaster />
         </div>
     )
 }

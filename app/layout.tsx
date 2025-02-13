@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import { NextAuthProvider } from "./providers";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -12,6 +13,9 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+
+
+
     return (
         <html lang="en" suppressHydrationWarning>
             <body>
@@ -21,7 +25,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <NextAuthProvider>{children}</NextAuthProvider>
                 </ThemeProvider>
             </body>
         </html>

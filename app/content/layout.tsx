@@ -6,14 +6,12 @@ import {
 } from "@/components/ui/sidebar"
 import { User } from "@/types";
 import { ReactNode } from "react";
-import { useState } from "react";
 
 interface ContentLayoutProps {
     children: ReactNode
 }
 
 export default function ContentLayout({ children }: ContentLayoutProps) {
-    const [user, setUser] = useState<User>();
     const userFake: User = {
         id: "1",
         name: "John Doe",
