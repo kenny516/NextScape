@@ -1,12 +1,26 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+// middleware.ts
+import { NextResponse, NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-    return NextResponse.redirect(new URL('/', request.url))
-}
-
-// See "Matching Paths" below to learn more
 export const config = {
-    matcher: '/about/:path*',
+    matcher: [
+        // Protéger les routes /content et /dashboard
+        '/content/:path*',
+        // Exclure les fichiers publics et API routes
+        '/((?!api|_next/static|_next/image|favicon.ico|sign-in|sign-up).*)',
+    ]
+};
+
+export async function middleware(req: NextRequest) {
+    const token = await getToken({
+        req,
+        secret: process.env.JWT_SECRET
+    });
+
+    if (token) {
+        return NextResponse.next();
+    }
+    // Rediriger vers la page de connexion avec le callback URL
+    const signInUrl = new URL('/sign-in', req.url);
+    return NextResponse.redirect(signInUrl);
 }

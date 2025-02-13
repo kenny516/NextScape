@@ -4,29 +4,20 @@ import {
     SidebarInset,
     SidebarProvider,
 } from "@/components/ui/sidebar"
-import { User } from "@/types";
-import { ReactNode, useState } from "react"
+import { ReactNode } from "react";
 
 interface ContentLayoutProps {
     children: ReactNode
 }
 
 export default function ContentLayout({ children }: ContentLayoutProps) {
-    const [user, setUser] = useState<User>();
-    const userFake: User = {
-        id: "1",
-        name: "John Doe",
-        email: "john@gmail.com",
-        avatar: "https://randomuser"
-    }
-
-    // some code to fetch the user
-
     return (
         <SidebarProvider>
-            {userFake && <AppSidebar user={userFake} />}
+            <AppSidebar />
             <SidebarInset>
-                {children}
+                <div className="h-full w-full">
+                    {children}
+                </div>
             </SidebarInset>
         </SidebarProvider>
     )
