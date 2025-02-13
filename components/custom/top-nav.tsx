@@ -8,9 +8,13 @@ import Profile from "./profile"
 import { ThemeToggle } from "../theme/toggle-theme"
 import { BreadcrumbItem } from "@/types"
 import { Button } from "../ui/button"
+import { useUserStore } from "@/stores/useUserStore"
 
 
 export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
+
+    const { user } = useUserStore();
+
 
     return (
         <nav className="px-3 sm:px-6 flex items-center justify-between bg-white dark:bg-[#0F0F12] border-b rounded-xl border-gray-200 dark:border-[#1F1F23] w-full h-full">
@@ -35,8 +39,7 @@ export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] 
             <div className="flex items-center gap-2 sm:gap-4 ml-auto sm:ml-0">
                 <Button
                     variant="outline" size="icon"
-                    type="button"
-                    className="p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-[#1F1F23] rounded-full transition-colors"
+                    className="rounded-xl"
                 >
                     <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
                 </Button>
@@ -46,7 +49,7 @@ export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] 
                 <DropdownMenu>
                     <DropdownMenuTrigger className="focus:outline-none">
                         <Image
-                            src="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png"
+                            src={user?.image || "/vercel.svg"}
                             alt="User avatar"
                             width={28}
                             height={28}
@@ -58,7 +61,10 @@ export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] 
                         sideOffset={8}
                         className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg"
                     >
-                        <Profile avatar="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png" />
+                        <Profile
+                            name={user?.name}
+                            email={user?.email}
+                            avatar={user?.image} />
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

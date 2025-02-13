@@ -1,114 +1,86 @@
-import { LogOut, MoveUpRight, Settings, CreditCard, FileText } from "lucide-react"
-import Image from "next/image"
+"use client"
+
+import type React from "react"
+import { Settings, LogOut, Bell, User, CreditCard, HelpCircle, ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 
 interface MenuItem {
     label: string
-    value?: string
+    icon: React.ReactNode
     href: string
-    icon?: React.ReactNode
-    external?: boolean
 }
 
 interface Profile01Props {
     name: string
-    role: string
+    email: string
     avatar: string
-    subscription?: string
+    role: string
 }
 
 const defaultProfile = {
     name: "Eugene An",
-    role: "Prompt Engineer",
+    email: "eugene.an@example.com",
     avatar: "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png",
-    subscription: "Free Trial",
+    role: "Prompt Engineer",
 } satisfies Required<Profile01Props>
+
+const menuItems: MenuItem[] = [
+    { label: "Account", icon: <User className="w-4 h-4" />, href: "#account" },
+    { label: "Settings", icon: <Settings className="w-4 h-4" />, href: "#settings" },
+    { label: "Help", icon: <HelpCircle className="w-4 h-4" />, href: "#help" },
+]
 
 export default function Profile({
     name = defaultProfile.name,
-    role = defaultProfile.role,
+    email = defaultProfile.email,
     avatar = defaultProfile.avatar,
-    subscription = defaultProfile.subscription,
+    role = defaultProfile.role,
 }: Partial<Profile01Props> = defaultProfile) {
-    const menuItems: MenuItem[] = [
-        {
-            label: "Subscription",
-            value: subscription,
-            href: "#",
-            icon: <CreditCard className="w-4 h-4" />,
-            external: false,
-        },
-        {
-            label: "Settings",
-            href: "#",
-            icon: <Settings className="w-4 h-4" />,
-        },
-        {
-            label: "Terms & Policies",
-            href: "#",
-            icon: <FileText className="w-4 h-4" />,
-            external: true,
-        },
-    ]
-
     return (
-        <div className="w-full max-w-sm mx-auto">
-            <div className="relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800">
-                <div className="relative px-6 pt-12 pb-6">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="relative shrink-0">
-                            <Image
-                                src={avatar}
-                                alt={name}
-                                width={72}
-                                height={72}
-                                className="rounded-full ring-4 ring-white dark:ring-zinc-900 object-cover"
-                            />
-                            <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-zinc-900" />
-                        </div>
-
-                        {/* Profile Info */}
-                        <div className="flex-1">
-                            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">{name}</h2>
-                            <p className="text-zinc-600 dark:text-zinc-400">{role}</p>
-                        </div>
-                    </div>
-                    <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-6" />
-                    <div className="space-y-2">
-                        {menuItems.map((item) => (
-                            <Link
-                                key={item.label}
-                                href={item.href}
-                                className="flex items-center justify-between p-2 
-                                    hover:bg-zinc-50 dark:hover:bg-zinc-800/50 
-                                    rounded-lg transition-colors duration-200"
-                            >
-                                <div className="flex items-center gap-2">
-                                    {item.icon}
-                                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{item.label}</span>
-                                </div>
-                                <div className="flex items-center">
-                                    {item.value && <span className="text-sm text-zinc-500 dark:text-zinc-400 mr-2">{item.value}</span>}
-                                    {item.external && <MoveUpRight className="w-4 h-4" />}
-                                </div>
-                            </Link>
-                        ))}
-
-                        <button
-                            type="button"
-                            className="w-full flex items-center justify-between p-2 
-                                hover:bg-zinc-50 dark:hover:bg-zinc-800/50 
-                                rounded-lg transition-colors duration-200"
-                        >
-                            <div className="flex items-center gap-2">
-                                <LogOut className="w-4 h-4" />
-                                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Logout</span>
-                            </div>
-                        </button>
-                    </div>
+        <Card className="w-full max-w-sm sm:max-w-md mx-auto shadow-lg">
+            <CardHeader className="relative pb-0">
+                <div className="flex flex-col items-center">
+                    <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white shadow-lg">
+                        <AvatarImage src={avatar} alt={name} />
+                        <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <h2 className="mt-4 text-xl sm:text-2xl font-bold text-center">{name}</h2>
+                    <p className="text-sm text-muted-foreground text-center break-all">{email}</p>
+                    <Badge variant="secondary" className="mt-2">
+                        {role}
+                    </Badge>
                 </div>
-            </div>
-        </div>
+            </CardHeader>
+            <CardContent className="pt-6">
+                <Separator className="my-4" />
+                <nav className="space-y-1 sm:space-y-2">
+                    {menuItems.map((item) => (
+                        <Link
+                            key={item.label}
+                            href={item.href}
+                            className="flex items-center justify-between p-2 rounded-lg hover:bg-accent transition-colors duration-200"
+                        >
+                            <div className="flex items-center gap-3">
+                                {item.icon}
+                                <span className="text-sm font-medium">{item.label}</span>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                        </Link>
+                    ))}
+                </nav>
+            </CardContent>
+            <CardFooter>
+                <Button variant="destructive" className="w-full" onClick={() => console.log("Logout clicked")}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                </Button>
+            </CardFooter>
+        </Card>
     )
 }
 

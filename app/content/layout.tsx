@@ -4,7 +4,6 @@ import {
     SidebarInset,
     SidebarProvider,
 } from "@/components/ui/sidebar"
-import { User } from "@/types";
 import { ReactNode } from "react";
 
 interface ContentLayoutProps {
@@ -12,18 +11,14 @@ interface ContentLayoutProps {
 }
 
 export default function ContentLayout({ children }: ContentLayoutProps) {
-    const userFake: User = {
-        id: "1",
-        name: "John Doe",
-        email: "john@gmail.com",
-        avatar: "https://randomuser"
-    }
 
     return (
         <SidebarProvider>
-            {userFake && <AppSidebar user={userFake} />}
+            <AppSidebar />
             <SidebarInset>
-                {children}
+                <div className=" h-full w-full">
+                    {children}
+                </div>
             </SidebarInset>
         </SidebarProvider>
     )

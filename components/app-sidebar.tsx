@@ -14,7 +14,6 @@ import {
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
 import {
     Sidebar,
     SidebarContent,
@@ -24,11 +23,6 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { User } from "@/types"
-
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-    user: User
-}
 
 const data = {
     navMain: [
@@ -83,9 +77,9 @@ const data = {
     ],
 }
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+export function AppSidebar() {
     return (
-        <Sidebar variant="inset" {...props}>
+        <Sidebar variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -109,7 +103,6 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 <NavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={user} />
             </SidebarFooter>
         </Sidebar>
     )

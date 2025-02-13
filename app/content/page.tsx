@@ -1,4 +1,5 @@
 "use client"
+import Content from '@/components/custom/content';
 import Header from '@/components/custom/header'
 import { useUserStore } from '@/stores/useUserStore';
 import { BreadcrumbItem } from '@/types';
@@ -17,15 +18,15 @@ export default function Page() {
     useEffect(() => {
         if (session?.user && user === null) {
             setUser(session.user);
-        } else {
-            setUser(null);
         }
     }, [session]);
 
     return (
-        <div className="w-full flex flex-1 flex-col">
-            <Header breadcrumbs={breadcrumbs} titre='page' />
-            <div>page</div>
-        </div>
+        <Content breadcrumbs={breadcrumbs}>
+            <div>
+                coucou
+            </div>
+        </Content>
+
     )
 }
