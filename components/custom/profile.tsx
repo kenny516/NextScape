@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Settings, LogOut, User, ChevronRight } from "lucide-react"
+import { Settings, LogOut, Bell, User, CreditCard, HelpCircle, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -32,6 +32,7 @@ const defaultProfile = {
 const menuItems: MenuItem[] = [
     { label: "Account", icon: <User className="w-4 h-4" />, href: "#account" },
     { label: "Settings", icon: <Settings className="w-4 h-4" />, href: "#settings" },
+    { label: "Help", icon: <HelpCircle className="w-4 h-4" />, href: "#help" },
 ]
 
 export default function Profile({
@@ -41,15 +42,15 @@ export default function Profile({
     role = defaultProfile.role,
 }: Partial<Profile01Props> = defaultProfile) {
     return (
-        <Card className="w-full max-w-md mx-auto shadow-lg">
+        <Card className="w-full max-w-sm sm:max-w-md mx-auto shadow-lg">
             <CardHeader className="relative pb-0">
                 <div className="flex flex-col items-center">
-                    <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
+                    <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white shadow-lg">
                         <AvatarImage src={avatar} alt={name} />
                         <AvatarFallback>{name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <h2 className="mt-4 text-2xl font-bold text-center">{name}</h2>
-                    <p className="text-sm text-muted-foreground">{email}</p>
+                    <h2 className="mt-4 text-xl sm:text-2xl font-bold text-center">{name}</h2>
+                    <p className="text-sm text-muted-foreground text-center break-all">{email}</p>
                     <Badge variant="secondary" className="mt-2">
                         {role}
                     </Badge>
@@ -57,7 +58,7 @@ export default function Profile({
             </CardHeader>
             <CardContent className="pt-6">
                 <Separator className="my-4" />
-                <nav className="space-y-2">
+                <nav className="space-y-1 sm:space-y-2">
                     {menuItems.map((item) => (
                         <Link
                             key={item.label}
