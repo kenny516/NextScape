@@ -7,6 +7,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import AppleProvider from "next-auth/providers/apple";
 import { prisma } from "@/prisma/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter"
+import { comparePassword } from "@/app/action/auth/auth.action";
 
 declare module "next-auth" {
     interface Session {
@@ -59,17 +60,34 @@ const handler = NextAuth({
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials): Promise<User | null> {
-                if (!credentials?.username || !credentials?.password || !credentials?.email) {
-                    return null;
+            async authorize(credentials) {
+                if (!credentials?.email || !credentials?.password) {
+                    throw new Error("Email et mot de passe requis");
                 }
-                console.log(credentials);
+
+                // Vérifier si l'utilisateur existe dans la base de données
+                const user = await prisma.user.findUnique({
+                    where: { email: credentials.email },
+                });
+
+                if (!user) {
+                    throw new Error("Aucun utilisateur trouvé avec cet email");
+                }
+
+                // Vérifier si le mot de passe est correct
+                const isValidPassword = await comparePassword(credentials.password, user.password);
+
+                if (!isValidPassword) {
+                    throw new Error("Mot de passe incorrect");
+                }
+
+                // Retourner l'utilisateur authentifié
                 return {
-                    id: "1",
-                    name: credentials.username,
-                    email: credentials.email,
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
                 };
-            }
+            },
         })
     ],
     session: {
