@@ -1,12 +1,21 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-export { default } from "next-auth/middleware";
+import { NextResponse, NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-    return NextResponse.redirect(new URL('/', request.url))
-}
-
+// Configuration du matcher pour les routes protégées
 export const config = {
-    matcher: ["/dashboard/:path*"]
+    matcher: ["/content/*", "/dashboard/*"],
 };
+
+// Middleware pour vérifier la session
+export async function middleware(req: NextRequest) {
+    // Récupérer le token JWT de la session
+    const token = await getToken({ req, secret: process.env.JWT_SECRET });
+
+    // Si le token est valide, continuer la requête
+    if (token) {
+        return NextResponse.next();
+    }
+
+    // Sinon, rediriger vers la page de connexion
+    return NextResponse.redirect(new URL("/sign-in", req.url));
+}

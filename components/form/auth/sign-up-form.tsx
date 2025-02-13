@@ -17,6 +17,7 @@ import { signUpAction } from "@/app/action/auth/auth.action"
 import { useServerAction } from "zsa-react"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
+import { useRouter } from 'next/navigation'
 
 const signUpSchema = z.object({
     username: z.string().min(2, "Username must be at least 2 characters"),
@@ -34,6 +35,7 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 export function SignUpForm({ className, ...props }: React.ComponentProps<"div">) {
     const { isPending, execute } = useServerAction(signUpAction);
     const { toast } = useToast();
+    const router = useRouter();
 
 
     const {
@@ -69,12 +71,29 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
             }
 
             // Connexion automatique après l'inscription réussie
-            await signIn("credentials", {
+            const response = await signIn("credentials", {
                 email: signUpData.email,
                 password: signUpData.password,
                 callbackUrl: "/content",
                 redirect: false
             });
+            if (response?.error) {
+                toast({
+                    variant: "destructive",
+                    title: "SignIn Failed",
+                    description: response.error,
+                    action: <ToastAction altText="Try again">Try again</ToastAction>,
+                });
+            }
+            if (response?.status === 200) {
+                toast({
+                    variant: "default",
+                    title: "Logged in successfully",
+                    description: "Welcome back!",
+                });
+                router.push("/content");
+            }
+
         } catch (error) {
             toast({
                 variant: "destructive",
