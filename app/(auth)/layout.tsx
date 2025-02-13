@@ -1,4 +1,4 @@
-import { ModeToggle } from '@/components/theme/toggle-theme'
+import { ThemeToggle } from '@/components/theme/toggle-theme'
 import { Toaster } from '@/components/ui/toaster'
 import { ReactNode } from 'react'
 
@@ -10,7 +10,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
     return (
         <div className='relative min-h-svh w-full'>
             <div className='absolute right-4 top-4 z-10'>
-                <ModeToggle />
+                <ThemeToggle />
             </div>
             {children}
             <Toaster />

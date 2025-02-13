@@ -103,9 +103,6 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <Label htmlFor="password">Password</Label>
-                                    <Link href="#" className="text-sm text-primary hover:underline">
-                                        Forgot password?
-                                    </Link>
                                 </div>
                                 <Input
                                     {...register("password")}

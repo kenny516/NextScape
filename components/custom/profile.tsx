@@ -1,13 +1,15 @@
 "use client"
 
 import type React from "react"
-import { Settings, LogOut, Bell, User, CreditCard, HelpCircle, ChevronRight } from "lucide-react"
+import { Settings, LogOut, User, HelpCircle, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { signOut } from "next-auth/react"
+import { useUserStore } from "@/stores/useUserStore"
 
 interface MenuItem {
     label: string
@@ -41,6 +43,7 @@ export default function Profile({
     avatar = defaultProfile.avatar,
     role = defaultProfile.role,
 }: Partial<Profile01Props> = defaultProfile) {
+    const { setUser } = useUserStore();
     return (
         <Card className="w-full max-w-sm sm:max-w-md mx-auto shadow-lg">
             <CardHeader className="relative pb-0">
@@ -75,7 +78,11 @@ export default function Profile({
                 </nav>
             </CardContent>
             <CardFooter>
-                <Button variant="destructive" className="w-full" onClick={() => console.log("Logout clicked")}>
+                <Button variant="destructive" className="w-full" onClick={() => {
+                    signOut({ callbackUrl: "/" });
+
+                    setUser(null);
+                }}>
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout
                 </Button>
