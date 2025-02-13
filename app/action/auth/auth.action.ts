@@ -5,6 +5,13 @@ import z from "zod";
 import bcrypt from 'bcrypt';
 import { prisma } from "@/prisma/prisma";
 
+export const hashPassword = async (password: string) => {
+    return await bcrypt.hash(password, 10);
+}
+
+export const comparePassword = async (password: string, hashedPassword: string) => {
+    return await bcrypt.compare(password, hashedPassword);
+}
 
 export const signUpAction = action
     .input(z.object({
@@ -38,12 +45,13 @@ export const signUpAction = action
         }
     });
 
+export const authAccessAction = action
+    .handler(async () => {
 
 
-export const hashPassword = async (password: string) => {
-    return await bcrypt.hash(password, 10);
-}
 
-export const comparePassword = async (password: string, hashedPassword: string) => {
-    return await bcrypt.compare(password, hashedPassword);
-}
+        return;
+    });
+
+
+

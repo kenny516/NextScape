@@ -8,6 +8,7 @@ import AppleProvider from "next-auth/providers/apple";
 import { prisma } from "@/prisma/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { comparePassword } from "@/app/action/auth/auth.action";
+import { useUserStore } from "@/stores/useUserStore";
 
 declare module "next-auth" {
     interface Session {
@@ -119,6 +120,7 @@ const handler = NextAuth({
                 session.user.providerId = token.providerId as string;
                 session.user.accessToken = token.accessToken as string;
             }
+
             return session;
         },
     },
