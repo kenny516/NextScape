@@ -1,21 +1,25 @@
 "use client"
 import Header from '@/components/custom/header'
-import { ModeToggle } from '@/components/theme/toggle-theme'
+import { useUserStore } from '@/stores/useUserStore';
 import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
 
 export default function Page() {
     const { data: session } = useSession();
+    const { user, setUser } = useUserStore();
 
-    if (session) {
-        console.log("Session:", session);
-    } else {
-        console.log("No session found.");
-    }
+    useEffect(() => {
+        if (session?.user && user === null) {
+            setUser(session.user);
+        } else {
+            setUser(null);
+        }
+    }, [session]);
+
     return (
-        <>
+        <div className="w-full flex flex-1 flex-col">
             <Header titre="page" />
-            <ModeToggle />
             <div>page</div>
-        </>
+        </div>
     )
 }
