@@ -4,7 +4,6 @@ import {
     SidebarInset,
     SidebarProvider,
 } from "@/components/ui/sidebar"
-import { User } from "@/types";
 import { ReactNode } from "react";
 
 interface ContentLayoutProps {

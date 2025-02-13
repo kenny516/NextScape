@@ -1,4 +1,5 @@
 "use client"
+import Content from '@/components/custom/content';
 import Header from '@/components/custom/header'
 import { useUserStore } from '@/stores/useUserStore';
 import { BreadcrumbItem } from '@/types';
@@ -23,9 +24,11 @@ export default function Page() {
     }, [session]);
 
     return (
-        <div className="w-full flex flex-1 flex-col">
-            <Header breadcrumbs={breadcrumbs} />
-            <div>page</div>
-        </div>
+        <Content breadcrumbs={breadcrumbs}>
+            <div>
+                coucou
+            </div>
+        </Content>
+
     )
 }
