@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -15,9 +14,13 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signUpAction } from "@/app/action/auth/auth.action"
+import { useServerAction } from "zsa-react"
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 const signUpSchema = z.object({
     username: z.string().min(2, "Username must be at least 2 characters"),
+
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string()
@@ -29,7 +32,8 @@ const signUpSchema = z.object({
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export function SignUpForm({ className, ...props }: React.ComponentProps<"div">) {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { isPending, execute } = useServerAction(signUpAction);
+    const { toast } = useToast()
 
     const {
         register,
@@ -39,24 +43,35 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
         resolver: zodResolver(signUpSchema)
     });
 
-    const onSubmit = async (data: SignUpFormData) => {
-        setIsLoading(true);
+    const onSubmit = async (dataForm: SignUpFormData) => {
         try {
-            const { confirmPassword: _unused, ...signUpData } = data;
+            const { confirmPassword: _unused, ...signUpData } = dataForm;
             void _unused; // explicitly mark as intentionally unused
 
-            await signUpAction(signUpData);
+            const [data, err] = await execute(signUpData);
+            console.log(data, err);
 
-            // Redirect to sign in
-            await signIn("credentials", {
-                email: signUpData.email,
-                password: signUpData.password,
-                callbackUrl: "/content"
-            });
+
+            if (err) {
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: err.message,
+                    action: <ToastAction altText="Try again">Try again</ToastAction>,
+
+                })
+                return;
+            }
+
+            // Connexion automatique après l'inscription réussie
+            /*             await signIn("credentials", {
+                            email: signUpData.email,
+                            password: signUpData.password,
+                            callbackUrl: "/content",
+                            redirect: true
+                        }); */
         } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
+            console.error("Error during sign up:", error);
         }
     };
 
@@ -122,8 +137,8 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                                 )}
                             </div>
                         </div>
-                        <Button type="submit" className="w-full" disabled={isLoading}>
-                            {isLoading ? (
+                        <Button type="submit" className="w-full" disabled={isPending}>
+                            {isPending ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     Creating account...
@@ -174,4 +189,5 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
         </div>
     )
 }
+
 

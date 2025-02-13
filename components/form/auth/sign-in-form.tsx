@@ -37,6 +37,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
         setIsLoading(true);
         try {
             await signIn("credentials", {
+                redirect: false,
                 ...data,
                 callbackUrl: "/content"
             });
