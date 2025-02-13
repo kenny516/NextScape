@@ -12,16 +12,10 @@ interface ContentLayoutProps {
 }
 
 export default function ContentLayout({ children }: ContentLayoutProps) {
-    const userFake: User = {
-        id: "1",
-        name: "John Doe",
-        email: "john@gmail.com",
-        avatar: "https://randomuser"
-    }
 
     return (
         <SidebarProvider>
-            {userFake && <AppSidebar user={userFake} />}
+            <AppSidebar />
             <SidebarInset>
                 <div className=" h-full w-full">
                     {children}
