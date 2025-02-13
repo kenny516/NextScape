@@ -18,8 +18,6 @@ export default function Page() {
     useEffect(() => {
         if (session?.user && user === null) {
             setUser(session.user);
-        } else {
-            setUser(null);
         }
     }, [session]);
 

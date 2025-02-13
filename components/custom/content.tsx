@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import Header from './header'
 import { BreadcrumbItem } from '@/types'
 interface ContentLayoutProps {
