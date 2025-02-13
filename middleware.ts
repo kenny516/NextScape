@@ -1,21 +1,29 @@
+// middleware.ts
 import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-// Configuration du matcher pour les routes protégées
 export const config = {
-    matcher: ["/content/*", "/dashboard/*"],
+    matcher: [
+        // Protéger les routes /content et /dashboard
+        '/content/:path*',
+        '/dashboard/:path*',
+        // Exclure les fichiers publics et API routes
+        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    ]
 };
 
-// Middleware pour vérifier la session
 export async function middleware(req: NextRequest) {
-    // Récupérer le token JWT de la session
-    const token = await getToken({ req, secret: process.env.JWT_SECRET });
+    const token = await getToken({
+        req,
+        secret: process.env.JWT_SECRET
+    });
 
-    // Si le token est valide, continuer la requête
     if (token) {
         return NextResponse.next();
     }
 
-    // Sinon, rediriger vers la page de connexion
-    return NextResponse.redirect(new URL("/sign-in", req.url));
+    // Rediriger vers la page de connexion avec le callback URL
+    const signInUrl = new URL('/sign-in', req.url);
+    signInUrl.searchParams.set('callbackUrl', req.url);
+    return NextResponse.redirect(signInUrl);
 }
