@@ -18,7 +18,7 @@ export default function Page() {
         if (session?.user && user === null) {
             setUser(session.user);
         }
-    }, [session]);
+    }, [session, setUser, user]);
 
     return (
         <Content breadcrumbs={breadcrumbs}>
