@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { Info, LayoutGrid } from "lucide-react"
+import { LayoutGrid } from "lucide-react"
 import Link from "next/link"
 
 interface LogoProps {

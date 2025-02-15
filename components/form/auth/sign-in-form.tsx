@@ -35,7 +35,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
     const error = searchParams.get("error")
 
     useEffect(() => {
-        if (error != "OAuthAccountNotLinked") {
+        if (error != "OAuthAccountNotLinked" && error != null) {
             console.log("error", error)
             toast({
                 variant: "destructive",
