@@ -2,12 +2,8 @@
 
 import * as React from "react"
 import {
-    Bot,
-    ChartArea,
-    Command,
     Frame,
     LayoutDashboard,
-    LayoutDashboardIcon,
     LifeBuoy,
     Map,
     PieChart,
@@ -27,6 +23,7 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Logo from "./custom/logo"
+import Link from "next/link"
 
 const data = {
     navMain: [
@@ -36,8 +33,8 @@ const data = {
             icon: LayoutDashboard,
             items: [
                 {
-                    title: "Genesis",
-                    url: "#",
+                    title: "Chart",
+                    url: "/content/back-office/dashboard/chart",
                 },
                 {
                     title: "Explorer",
@@ -88,7 +85,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <a href="#">
+                            <Link href="#">
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <Logo variant="icon" />
                                 </div>
@@ -96,7 +93,7 @@ export function AppSidebar() {
                                     <span className="truncate font-semibold">Acme Inc</span>
                                     <span className="truncate text-xs">Enterprise</span>
                                 </div>
-                            </a>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

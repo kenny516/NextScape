@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils"
 import { LayoutGrid } from "lucide-react"
-import Link from "next/link"
 
 interface LogoProps {
     variant?: "full" | "icon"
