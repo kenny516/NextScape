@@ -23,7 +23,7 @@ export default function Page() {
     return (
         <Content breadcrumbs={breadcrumbs}>
             <div>
-                coucou
+                dashborad
             </div>
         </Content>
 
