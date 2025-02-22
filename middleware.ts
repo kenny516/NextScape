@@ -12,6 +12,13 @@ export const config = {
 };
 
 export async function middleware(req: NextRequest) {
+    const { pathname } = req.nextUrl;
+    const publicRoutes = ['/'];
+    // Si la route est publique, laisser passer la requête
+    if (publicRoutes.includes(pathname)) {
+        return NextResponse.next();
+    }
+
     const token = await getToken({
         req,
         secret: process.env.JWT_SECRET
