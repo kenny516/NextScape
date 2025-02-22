@@ -14,7 +14,7 @@ export default function Logo({ variant = "full", className }: LogoProps) {
                 className
             )}
         >
-            <div className="rounded-lg bg-sidebar-primary p-1">
+            <div className="rounded-lg bg-primary p-1">
                 <LayoutGrid
                     size={variant === "icon" ? 24 : 20}
                     //you can change the color of the icon by changing the color attribute
