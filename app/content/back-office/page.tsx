@@ -1,4 +1,5 @@
 "use client"
+import ChartLine from '@/components/back-office/chart/chart-line';
 import Content from '@/components/custom/content';
 import { useUserStore } from '@/stores/useUserStore';
 import { BreadcrumbItem } from '@/types';
@@ -22,8 +23,8 @@ export default function Page() {
 
     return (
         <Content breadcrumbs={breadcrumbs}>
-            <div>
-                dashborad
+            <div className='size-1/2'>
+                <ChartLine />
             </div>
         </Content>
 

@@ -45,13 +45,6 @@ export const signUpAction = action
         }
     });
 
-export const authAccessAction = action
-    .handler(async () => {
-
-
-
-        return;
-    });
 
 
 
