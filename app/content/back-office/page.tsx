@@ -8,8 +8,7 @@ import { useEffect } from 'react';
 
 export default function Page() {
     const breadcrumbs: BreadcrumbItem[] = [
-        { label: 'Home', href: '/' },
-        { label: 'Page' },
+        { label: 'Home', href: '/' }
     ];
 
     const { data: session } = useSession();
