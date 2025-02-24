@@ -2,9 +2,8 @@
 
 import * as React from "react"
 import {
-    Bot,
-    Command,
     Frame,
+    LayoutDashboard,
     LifeBuoy,
     Map,
     PieChart,
@@ -23,17 +22,19 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Logo from "./custom/logo"
+import Link from "next/link"
 
 const data = {
     navMain: [
         {
-            title: "Models",
+            title: "Dashboard",
             url: "#",
-            icon: Bot,
+            icon: LayoutDashboard,
             items: [
                 {
-                    title: "Genesis",
-                    url: "#",
+                    title: "Chart",
+                    url: "/content/back-office/dashboard/chart",
                 },
                 {
                     title: "Explorer",
@@ -84,15 +85,15 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <a href="#">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                                    <Command className="size-4" />
+                            <Link href="#">
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                                    <Logo variant="icon" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
                                     <span className="truncate font-semibold">Acme Inc</span>
                                     <span className="truncate text-xs">Enterprise</span>
                                 </div>
-                            </a>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

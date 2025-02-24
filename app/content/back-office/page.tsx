@@ -1,4 +1,5 @@
 "use client"
+import ChartLine from '@/components/back-office/chart/chart-line';
 import Content from '@/components/custom/content';
 import { useUserStore } from '@/stores/useUserStore';
 import { BreadcrumbItem } from '@/types';
@@ -7,13 +8,11 @@ import { useEffect } from 'react';
 
 export default function Page() {
     const breadcrumbs: BreadcrumbItem[] = [
-        { label: 'Home', href: '/' },
-        { label: 'Page' },
+        { label: 'Home', href: '/' }
     ];
 
     const { data: session } = useSession();
     const { user, setUser } = useUserStore();
-    console.log(session);
     useEffect(() => {
         if (session?.user && user === null) {
             setUser(session.user);
@@ -22,8 +21,8 @@ export default function Page() {
 
     return (
         <Content breadcrumbs={breadcrumbs}>
-            <div>
-                coucou
+            <div className='size-1/2'>
+                <ChartLine />
             </div>
         </Content>
 

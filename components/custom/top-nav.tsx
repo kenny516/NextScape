@@ -4,11 +4,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import Image from "next/image"
 import { Bell, ChevronRight } from "lucide-react"
 import Link from "next/link"
-import Profile from "./profile"
 import { ThemeToggle } from "../theme/toggle-theme"
 import { BreadcrumbItem } from "@/types"
 import { Button } from "../ui/button"
 import { useUserStore } from "@/stores/useUserStore"
+import { ProfileMenu } from "./profile/profile-menu"
 
 
 export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
@@ -61,7 +61,7 @@ export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] 
                         sideOffset={8}
                         className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg"
                     >
-                        <Profile
+                        <ProfileMenu
                             name={user?.name}
                             email={user?.email}
                             avatar={user?.image} />

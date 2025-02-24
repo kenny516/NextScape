@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils"
 import { LayoutGrid } from "lucide-react"
-import Link from "next/link"
 
 interface LogoProps {
     variant?: "full" | "icon"
@@ -9,8 +8,7 @@ interface LogoProps {
 
 export default function Logo({ variant = "full", className }: LogoProps) {
     return (
-        <Link
-            href="/"
+        <div
             className={cn(
                 "flex items-center gap-2 font-bold",
                 className
@@ -21,12 +19,11 @@ export default function Logo({ variant = "full", className }: LogoProps) {
                     size={variant === "icon" ? 24 : 20}
                     //you can change the color of the icon by changing the color attribute
                     color="currentColor"
-                    className="text-primary-foreground"
                 />
             </div>
             {variant === "full" && (
                 <span className="text-xl">Dashboard</span>
             )}
-        </Link>
+        </div>
     )
 }
