@@ -67,7 +67,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
         try {
             await signIn("credentials", {
                 ...data,
-                callbackUrl: "/content",
+                callbackUrl: "/content/back-office",
             })
         } catch (error: unknown) {
             toast({

@@ -32,12 +32,12 @@ const defaultProfile = {
 } satisfies Required<Profile01Props>
 
 const menuItems: MenuItem[] = [
-    { label: "Account", icon: <User className="w-4 h-4" />, href: "#account" },
+    { label: "Account", icon: <User className="w-4 h-4" />, href: "/content/back-office/settings/profile" },
     { label: "Settings", icon: <Settings className="w-4 h-4" />, href: "#settings" },
     { label: "Help", icon: <HelpCircle className="w-4 h-4" />, href: "#help" },
 ]
 
-export default function Profile({
+export function ProfileMenu({
     name = defaultProfile.name,
     email = defaultProfile.email,
     avatar = defaultProfile.avatar,
