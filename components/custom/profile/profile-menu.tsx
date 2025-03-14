@@ -17,10 +17,10 @@ interface MenuItem {
 }
 
 interface Profile01Props {
-    name: string | null
-    email: string | null
-    avatar: string | null
-    role: string | null
+    name: string
+    email: string
+    avatar: string
+    role: string
 }
 
 const defaultProfile = {
@@ -48,7 +48,7 @@ export function ProfileMenu({
                 <div className="flex flex-col items-center">
                     <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white shadow-lg">
                         <AvatarImage src={avatar} alt={name} />
-                        <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback>{name?.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <h2 className="mt-4 text-lg sm:text-xl font-bold text-center">{name}</h2>
                     <p className="text-sm text-muted-foreground text-center break-all">{email}</p>
