@@ -7,13 +7,14 @@ import Link from "next/link"
 import { ThemeToggle } from "../theme/toggle-theme"
 import { BreadcrumbItem } from "@/types"
 import { Button } from "../ui/button"
-import { useUserStore } from "@/stores/useUserStore"
 import { ProfileMenu } from "./profile/profile-menu"
+import { useSession } from "next-auth/react"
 
 
 export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
 
-    const { user } = useUserStore();
+    const { data: session } = useSession();
+    const user = session?.user;
 
 
     return (
@@ -62,9 +63,9 @@ export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] 
                         className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg"
                     >
                         <ProfileMenu
-                            name={user?.name}
-                            email={user?.email}
-                            avatar={user?.image} />
+                            name={user?.name === null ? "user" : user?.name}
+                            email={user?.email === null ? "user@gmail.com" : user?.email}
+                            avatar={user?.image === null ? "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png" : user?.image} />
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

@@ -154,7 +154,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                                 className="w-full"
                                 onClick={() => {
                                     setLoadingProvider(provider)
-                                    signIn(provider, { callbackUrl: "/content" })
+                                    signIn(provider, { callbackUrl: "/content/back-office" })
                                 }}
                                 disabled={loadingProvider !== null}
                             >
