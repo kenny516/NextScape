@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/custom/icon"
 import Link from "next/link"
-import { Loader2 } from "lucide-react"
+import { Loader, Loader2 } from "lucide-react"
 import Logo from "@/components/custom/logo"
 import { signIn } from "next-auth/react"
 import { z } from "zod"
@@ -18,6 +18,7 @@ import { useServerAction } from "zsa-react"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 const signUpSchema = z
     .object({
@@ -35,9 +36,10 @@ const signUpSchema = z
 type SignUpFormData = z.infer<typeof signUpSchema>
 
 export function SignUpForm({ className, ...props }: React.ComponentProps<"div">) {
-    const { isPending, execute } = useServerAction(signUpAction)
-    const { toast } = useToast()
-    const router = useRouter()
+    const { isPending, execute } = useServerAction(signUpAction);
+    const { toast } = useToast();
+    const router = useRouter();
+    const [loadingProvider, setLoadingProvider] = useState<string | null>(null)
 
     const {
         register,
@@ -46,6 +48,13 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
     } = useForm<SignUpFormData>({
         resolver: zodResolver(signUpSchema),
     })
+
+    useEffect(() => {
+        if (loadingProvider) {
+            const timer = setTimeout(() => setLoadingProvider(null), 5000) // Réinitialise après 5 secondes
+            return () => clearTimeout(timer)
+        }
+    }, [loadingProvider])
 
     const onSubmit = async (dataForm: SignUpFormData) => {
         try {
@@ -184,9 +193,17 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                                 key={provider}
                                 variant="outline"
                                 className="w-full"
-                                onClick={() => signIn(provider, { callbackUrl: "/content" })}
+                                onClick={() => {
+                                    setLoadingProvider(provider)
+                                    signIn(provider, { callbackUrl: "/content/back-office" })
+                                }}
+                                disabled={loadingProvider !== null}
                             >
-                                <span className="h-5 w-5">{Icons[provider as keyof typeof Icons]()}</span>
+                                {loadingProvider === provider ? (
+                                    <Loader className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <span className="h-5 w-5">{Icons[provider as keyof typeof Icons]()}</span>
+                                )}
                             </Button>
                         ))}
                     </div>
