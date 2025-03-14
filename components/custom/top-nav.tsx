@@ -7,13 +7,14 @@ import Link from "next/link"
 import { ThemeToggle } from "../theme/toggle-theme"
 import { BreadcrumbItem } from "@/types"
 import { Button } from "../ui/button"
-import { useUserStore } from "@/stores/useUserStore"
 import { ProfileMenu } from "./profile/profile-menu"
+import { useSession } from "next-auth/react"
 
 
 export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
 
-    const { user } = useUserStore();
+    const { data: session } = useSession();
+    const user = session?.user;
 
 
     return (

@@ -9,7 +9,6 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { signOut } from "next-auth/react"
-import { useUserStore } from "@/stores/useUserStore"
 
 interface MenuItem {
     label: string
@@ -18,10 +17,10 @@ interface MenuItem {
 }
 
 interface Profile01Props {
-    name: string
-    email: string
-    avatar: string
-    role: string
+    name: string | null
+    email: string | null
+    avatar: string | null
+    role: string | null
 }
 
 const defaultProfile = {
@@ -43,7 +42,6 @@ export function ProfileMenu({
     avatar = defaultProfile.avatar,
     role = defaultProfile.role,
 }: Partial<Profile01Props> = defaultProfile) {
-    const { setUser } = useUserStore();
     return (
         <Card className="w-full max-w-sm sm:max-w-md mx-auto shadow-lg">
             <CardHeader className="relative pb-0">
@@ -78,10 +76,8 @@ export function ProfileMenu({
                 </nav>
             </CardContent>
             <CardFooter>
-                <Button variant="destructive" className="w-full" onClick={() => {
-                    signOut({ callbackUrl: "/" });
-
-                    setUser(null);
+                <Button variant="destructive" className="w-full" onClick={async () => {
+                    await signOut({ callbackUrl: "/" });
                 }}>
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout
