@@ -1,33 +1,30 @@
-// middleware.ts
-import { NextResponse, NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
+import axios from "axios";
+import type { auth } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
+
+type Session = typeof auth.$Infer.Session;
+
+export async function middleware(request: NextRequest) {
+    try {
+        const { data: session } = await axios.get<Session>("/api/auth/get-session", {
+            baseURL: request.nextUrl.origin,
+            headers: {
+                cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
+            },
+        });
+
+        if (!session) {
+            return NextResponse.redirect(new URL("/sign-in", request.url));
+        }
+
+        return NextResponse.next();
+    } catch (error) {
+        // En cas d'erreur, redirigez vers la page de connexion
+        console.error('Erreur de session:', error);
+        return NextResponse.redirect(new URL("/sign-in", request.url));
+    }
+}
 
 export const config = {
-    matcher: [
-        // Protéger les routes /content et /dashboard
-        '/content/:path*',
-        // Exclure les fichiers publics et API routes
-        '/((?!api|_next/static|_next/image|favicon.ico|sign-in|sign-up).*)',
-    ]
+    matcher: ["/dashboard", "/content", "/content/:path*"] // Protect /content and all its sub-routes
 };
-
-export async function middleware(req: NextRequest) {
-    const { pathname } = req.nextUrl;
-    const publicRoutes = ['/'];
-    // Si la route est publique, laisser passer la requête
-    if (publicRoutes.includes(pathname)) {
-        return NextResponse.next();
-    }
-
-    const token = await getToken({
-        req,
-        secret: process.env.JWT_SECRET
-    });
-
-    if (token) {
-        return NextResponse.next();
-    }
-    // Rediriger vers la page de connexion avec le callback URL
-    const signInUrl = new URL('/sign-in', req.url);
-    return NextResponse.redirect(signInUrl);
-}

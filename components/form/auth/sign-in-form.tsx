@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { signIn } from "next-auth/react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -18,6 +17,7 @@ import { Label } from "@/components/ui/label"
 import { ToastAction } from "@/components/ui/toast"
 import { Icons } from "@/components/custom/icon"
 import Logo from "@/components/custom/logo"
+import { authClient } from "@/lib/auth-client"
 
 const signInSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -65,10 +65,21 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
     const onSubmit = async (data: SignInFormData) => {
         setIsLoading(true)
         try {
-            await signIn("credentials", {
-                ...data,
-                callbackUrl: "/content/back-office",
+            const { data: authData, error } = await authClient.signIn.email({
+                email: data.email,
+                password: data.password,
+                callbackURL: "/content/back-office",
+                rememberMe: false
             })
+
+            if (error) {
+                throw new Error(error.message)
+            }
+
+            // Gérer le succès de la connexion si nécessaire
+            if (authData) {
+                // Redirection ou autres actions post-connexion
+            }
         } catch (error: unknown) {
             toast({
                 variant: "destructive",
@@ -154,7 +165,10 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                                 className="w-full"
                                 onClick={() => {
                                     setLoadingProvider(provider)
-                                    signIn(provider, { callbackUrl: "/content" })
+                                    authClient.signIn.social({
+                                        provider: provider as "apple" | "google" | "facebook",
+                                        callbackURL: "/content/back-office"
+                                    })
                                 }}
                                 disabled={loadingProvider !== null}
                             >

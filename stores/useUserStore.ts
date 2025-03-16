@@ -1,4 +1,5 @@
-// stores/useUserStore.ts
+'use client';
+
 import { create } from 'zustand'
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -14,6 +15,7 @@ interface UserState {
     isHydrated: boolean;
     setUser: (user: User | null) => void;
     setHydrated: (hydrated: boolean) => void;
+    resetStore: () => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -23,6 +25,14 @@ export const useUserStore = create<UserState>()(
             isHydrated: false,
             setUser: (user) => set({ user }),
             setHydrated: (hydrated) => set({ isHydrated: hydrated }),
+            resetStore: () => {
+                set({ user: null, isHydrated: false });
+                if (typeof window !== 'undefined') {
+                    useUserStore.persist.clearStorage();
+                    localStorage.removeItem("user-storage");
+                    sessionStorage.removeItem("user-storage");
+                }
+            },
         }),
         {
             name: "user-storage",
@@ -30,6 +40,7 @@ export const useUserStore = create<UserState>()(
             onRehydrateStorage: () => (state) => {
                 state?.setHydrated(true);
             },
+            partialize: (state) => ({ user: state.user }),
         }
     )
 );

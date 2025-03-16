@@ -7,17 +7,16 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/custom/icon"
 import Link from "next/link"
-import { Loader2 } from "lucide-react"
+import { Loader, Loader2 } from "lucide-react"
 import Logo from "@/components/custom/logo"
-import { signIn } from "next-auth/react"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { signUpAction } from "@/app/action/auth/auth.action"
-import { useServerAction } from "zsa-react"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { authClient } from "@/lib/auth-client"
 
 const signUpSchema = z
     .object({
@@ -35,9 +34,10 @@ const signUpSchema = z
 type SignUpFormData = z.infer<typeof signUpSchema>
 
 export function SignUpForm({ className, ...props }: React.ComponentProps<"div">) {
-    const { isPending, execute } = useServerAction(signUpAction)
-    const { toast } = useToast()
-    const router = useRouter()
+    const { toast } = useToast();
+    const router = useRouter();
+    const [loadingProvider, setLoadingProvider] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const {
         register,
@@ -47,61 +47,61 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
         resolver: zodResolver(signUpSchema),
     })
 
+    useEffect(() => {
+        if (loadingProvider) {
+            const timer = setTimeout(() => setLoadingProvider(null), 5000) // Réinitialise après 5 secondes
+            return () => clearTimeout(timer)
+        }
+    }, [loadingProvider])
+
     const onSubmit = async (dataForm: SignUpFormData) => {
         try {
             const { confirmPassword: _unused, ...signUpData } = dataForm
-            void _unused // explicitly mark as intentionally unused
+            void _unused
 
-            const [data, err] = await execute(signUpData)
-            console.log(data, err)
-            if (err) {
-                toast({
-                    variant: "destructive",
-                    title: "Registration Failed",
-                    description: err.message || "Please check your information and try again.",
-                    action: <ToastAction altText="Try again">Try again</ToastAction>,
-                })
-                return
-            } else {
-                toast({
-                    variant: "default",
-                    title: "Registration Successful",
-                    description: "You have successfully registered.",
-                    action: <ToastAction altText="Continue">Continue</ToastAction>,
-                })
-            }
-
-            // Connexion automatique après l'inscription réussie
-            const response = await signIn("credentials", {
+            const { error } = await authClient.signUp.email({
                 email: signUpData.email,
                 password: signUpData.password,
-                callbackUrl: "/content",
-                redirect: false,
+                name: signUpData.username,
+                callbackURL: "/content/back-office"
+            }, {
+                onRequest: () => {
+                    setIsLoading(true)
+                },
+                onSuccess: () => {
+                    setIsLoading(false)
+                    toast({
+                        variant: "default",
+                        title: "Registration Successful",
+                        description: "You have successfully registered. Please check your email to verify your account.",
+                    })
+                    router.push("/sign-in")
+                },
+                onError: (ctx) => {
+                    setIsLoading(false)
+                    toast({
+                        variant: "destructive",
+                        title: "Registration Failed",
+                        description: ctx.error.message,
+                        action: <ToastAction altText="Try again">Try again</ToastAction>,
+                    })
+                }
             })
-            if (response?.error) {
-                toast({
-                    variant: "destructive",
-                    title: "SignIn Failed",
-                    description: response.error,
-                    action: <ToastAction altText="Try again">Try again</ToastAction>,
-                })
+
+            if (error) {
+                throw new Error(error.message)
             }
-            if (response?.status === 200) {
-                toast({
-                    variant: "default",
-                    title: "Logged in successfully",
-                    description: "Welcome back!",
-                })
-                router.push("/content")
-            }
+
         } catch (error) {
+            setIsLoading(false)
             toast({
                 variant: "destructive",
                 title: "Registration Failed",
-                description: "An error occurred during registration. Please check your information and try again.",
+                description: error instanceof Error ? error.message : "An unexpected error occurred",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
             })
-            console.error("Error during sign up:", error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -159,8 +159,8 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                                 {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>}
                             </div>
                         </div>
-                        <Button type="submit" className="w-full" disabled={isPending}>
-                            {isPending ? (
+                        <Button type="submit" className="w-full" disabled={isLoading}>
+                            {isLoading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     Creating account...
@@ -184,9 +184,20 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                                 key={provider}
                                 variant="outline"
                                 className="w-full"
-                                onClick={() => signIn(provider, { callbackUrl: "/content" })}
+                                onClick={() => {
+                                    setLoadingProvider(provider)
+                                    authClient.signIn.social({
+                                        provider: provider as "apple" | "google" | "facebook",
+                                        callbackURL: "/content/back-office"
+                                    })
+                                }}
+                                disabled={loadingProvider !== null}
                             >
-                                <span className="h-5 w-5">{Icons[provider as keyof typeof Icons]()}</span>
+                                {loadingProvider === provider ? (
+                                    <Loader className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <span className="h-5 w-5">{Icons[provider as keyof typeof Icons]()}</span>
+                                )}
                             </Button>
                         ))}
                     </div>
