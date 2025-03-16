@@ -55,7 +55,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [Next.js 13+](https://nextjs.org/) - React framework
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 - [Prisma](https://www.prisma.io/) - Database ORM
-- [NextAuth.js](https://next-auth.js.org/) - Authentication
+- [Better-auth](https://www.better-auth.com/) - Authentication
 - [Tailwind CSS](https://tailwindcss.com/) - Styling
 - [shadcn/ui](https://ui.shadcn.com/) - UI Components
 
