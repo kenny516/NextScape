@@ -65,7 +65,7 @@ To learn more about the technologies used in this project:
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Prisma Documentation](https://www.prisma.io/docs)
-- [NextAuth.js Documentation](https://next-auth.js.org/getting-started/introduction)
+- [Better-auth Documentation](https://www.better-auth.com/docs/introduction)
 
 ## Contributing
 
