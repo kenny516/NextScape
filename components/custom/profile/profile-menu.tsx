@@ -1,5 +1,3 @@
-'use client';
-
 import type React from "react"
 import { Settings, User, HelpCircle, ChevronRight } from "lucide-react"
 import Link from "next/link"
@@ -7,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { LogoutButton } from "./log-out-btn"
-import { useSession } from "@/hooks/useSession";
+import { getUser } from "@/lib/auth-session"
 
 interface MenuItem {
     label: string
@@ -21,8 +19,8 @@ const menuItems: MenuItem[] = [
     { label: "Help", icon: <HelpCircle className="w-4 h-4" />, href: "#help" },
 ]
 
-export function ProfileMenu() {
-    const { user } = useSession();
+export async function ProfileMenu() {
+    const user = await getUser();
 
     return (
         <Card className="w-full max-w-sm sm:max-w-md mx-auto shadow-lg">

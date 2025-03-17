@@ -1,18 +1,14 @@
-'use client';
-
+"use client"
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { useUserStore } from "@/stores/useUserStore";
 
 export function LogoutButton() {
-    const resetStore = useUserStore(state => state.resetStore);
 
     const handleLogout = async () => {
         try {
             await authClient.signOut();
-            resetStore(); // Clear the user store
         } catch (error) {
             console.error('Error during logout:', error);
         }

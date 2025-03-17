@@ -1,7 +1,7 @@
 import React from 'react'
 import { SidebarTrigger } from '../ui/sidebar'
 import { Separator } from '../ui/separator'
-import TopNav from './top-nav';
+import { TopNav } from './top-nav';
 import { BreadcrumbItem } from '@/types';
 
 

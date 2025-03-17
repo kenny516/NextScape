@@ -1,12 +1,11 @@
 import { Badge } from '@/components/ui/badge';
-import { authClient } from '@/lib/auth-client';
+import { getUser } from '@/lib/auth-session';
 import Head from 'next/head';
 import Image from 'next/image';
 import React from 'react'
 
 export async function ProfileDetail() {
-    const session = await authClient.getSession()
-    const user = session?.data?.user;
+    const user = await getUser();
     return (
         <div className='w-full h-full m-auto '>
             <Head>

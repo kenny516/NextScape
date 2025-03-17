@@ -1,5 +1,3 @@
-'use client';
-
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Image from "next/image"
 import { Bell, ChevronRight } from "lucide-react"
@@ -8,11 +6,12 @@ import { ThemeToggle } from "../theme/toggle-theme"
 import { BreadcrumbItem } from "@/types"
 import { Button } from "../ui/button"
 import { ProfileMenu } from "./profile/profile-menu"
-import { useSession } from "@/hooks/useSession";
+import { getUser } from "@/lib/auth-session"
 
 
-export default function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
-    const { user } = useSession();
+export async function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
+
+    const user = await getUser();
     return (
         <nav className="px-3 sm:px-6 flex items-center justify-between bg-white dark:bg-[#0F0F12] border-b rounded-xl border-gray-200 dark:border-[#1F1F23] w-full h-full">
             <div className="font-medium text-sm hidden sm:flex items-center space-x-1 truncate max-w-[300px]">
