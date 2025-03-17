@@ -1,4 +1,3 @@
-"use client"
 import ChartLine from '@/components/back-office/chart/chart-line';
 import Content from '@/components/custom/content';
 import { BreadcrumbItem } from '@/types';
