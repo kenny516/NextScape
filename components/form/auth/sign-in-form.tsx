@@ -87,7 +87,6 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                 description: error instanceof Error ? error.message : "Please check your information and try again.",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
             })
-            console.error(error)
         } finally {
             setIsLoading(false)
         }
