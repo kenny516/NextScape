@@ -1,12 +1,12 @@
 import React from 'react'
-import Header from './header'
 import { BreadcrumbItem } from '@/types'
+import { Header } from './header';
 interface ContentLayoutProps {
     children: React.ReactNode;
     breadcrumbs: BreadcrumbItem[];
 }
 
-export default function Content({ children, breadcrumbs }: ContentLayoutProps) {
+export const Content = ({ children, breadcrumbs }: ContentLayoutProps) => {
     return (
         <div className='h-full w-full flex flex-col'>
             <Header breadcrumbs={breadcrumbs} />

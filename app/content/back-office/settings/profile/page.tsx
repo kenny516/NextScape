@@ -1,4 +1,4 @@
-import Content from '@/components/custom/content';
+import { Content } from '@/components/custom/content';
 import { ProfileDetail } from '@/components/custom/profile/profile-detail'
 import { BreadcrumbItem } from '@/types';
 import React from 'react'

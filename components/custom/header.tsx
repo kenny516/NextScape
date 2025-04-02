@@ -5,7 +5,7 @@ import { TopNav } from './top-nav';
 import { BreadcrumbItem } from '@/types';
 
 
-export default function Header({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
+export const Header = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
     return (
         <header className="flex h-16 shrink-0 items-center gap-2">
             <div className="flex w-full items-center gap-2 px-4">

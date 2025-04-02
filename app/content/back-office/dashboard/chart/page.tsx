@@ -1,5 +1,5 @@
 import ChartLine from '@/components/back-office/chart/chart-line';
-import Content from '@/components/custom/content';
+import { Content } from '@/components/custom/content';
 import { BreadcrumbItem } from '@/types';
 
 export default function Page() {

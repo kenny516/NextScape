@@ -19,7 +19,7 @@ const menuItems: MenuItem[] = [
     { label: "Help", icon: <HelpCircle className="w-4 h-4" />, href: "#help" },
 ]
 
-export async function ProfileMenu() {
+export const ProfileMenu = async () => {
     const user = await getUser();
 
     return (

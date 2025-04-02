@@ -9,7 +9,7 @@ import { ProfileMenu } from "./profile/profile-menu"
 import { getUser } from "@/lib/auth-session"
 
 
-export async function TopNav({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
+export const TopNav = async ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
 
     const user = await getUser();
     return (
