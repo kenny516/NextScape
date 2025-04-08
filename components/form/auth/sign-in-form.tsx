@@ -72,6 +72,7 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
                 rememberMe: false
             })
 
+
             if (error) {
                 throw new Error(error.message)
             }
@@ -80,13 +81,14 @@ export function SignInForm({ className, ...props }: React.ComponentProps<"div">)
             if (authData) {
                 // Redirection ou autres actions post-connexion
             }
-        } catch (error: unknown) {
+        } catch (error) {
             toast({
                 variant: "destructive",
                 title: "SignIn Failed",
                 description: error instanceof Error ? error.message : "Please check your information and try again.",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
             })
+
         } finally {
             setIsLoading(false)
         }
