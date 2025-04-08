@@ -20,7 +20,7 @@ export function LogoutButton() {
             variant="destructive"
             className="w-full flex items-center gap-2"
         >
-            <Link href="/sign-in" className="flex items-center w-full">
+            <Link href="/sign-in" className="flex items-center w-full gap-2">
                 <LogOut className="w-4 h-4" />
                 <span>Log out</span>
             </Link>
