@@ -8,7 +8,7 @@ interface AuthLayoutProps {
 export default function AuthLayout({ children }: AuthLayoutProps) {
     return (
         <div className='relative min-h-svh w-full'>
-            <div className='absolute right-4 top-4 z-10'>
+            <div className='absolute right-2 top-2 z-10'>
                 <ThemeToggle />
             </div>
             {children}

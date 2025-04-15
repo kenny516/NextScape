@@ -1,0 +1,37 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+        - path: package.json
+          action: rebuild
+        - path: next-config.ts
+          action: rebuild
+        - path: pnpm-lock.yaml
+          action: rebuild
+        - path: .
+          target: /app
+          action: sync
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/nextscape
+      DIRECT_URL: postgresql://postgres:postgres@db:5432/nextscape
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@db:5432/nextscape_shadow
+    depends_on:
+      - db
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nextscape
+    ports:
+      - "5432:5432"
+    volumes:
+      - next-scape:/var/lib/postgresql/data
+volumes:
+  next-scape:
+
