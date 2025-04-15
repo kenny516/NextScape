@@ -13,11 +13,11 @@ export const TopNav = async ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] })
 
     const user = await getUser();
     return (
-        <nav className="px-3 sm:px-6 flex items-center justify-between bg-white dark:bg-[#0F0F12] border-b rounded-xl border-gray-200 dark:border-[#1F1F23] w-full h-full">
+        <nav className="px-3 sm:px-6 flex items-center justify-between bg-sidebar border-accent rounded-xl w-full h-full">
             <div className="font-medium text-sm hidden sm:flex items-center space-x-1 truncate max-w-[300px]">
                 {breadcrumbs.map((item, index) => (
                     <div key={item.label} className="flex items-center">
-                        {index > 0 && <ChevronRight className="h-4 w-4 text-gray-500 dark:text-gray-400 mx-1" />}
+                        {index > 0 && <ChevronRight className="h-4 w-4 mx-1" />}
                         {item.href ? (
                             <Link
                                 href={item.href}
@@ -38,7 +38,7 @@ export const TopNav = async ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] })
                     className="rounded-xl"
                 >
                     <Link href="" className="">
-                        <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
+                        <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
                     </Link>
                 </Button>
 
