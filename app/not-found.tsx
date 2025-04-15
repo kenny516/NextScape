@@ -7,7 +7,7 @@ import { ConfettiButton } from "@/components/magicui/confetti"
 
 export default function NotFound() {
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background via-muted to-background">
+        <div className="flex items-center justify-center min-h-screen bg-accent">
 
             <Card className="w-full max-w-md mx-auto shadow-lg border-primary/20">
                 <CardContent className="pt-6 text-center relative overflow-hidden">
