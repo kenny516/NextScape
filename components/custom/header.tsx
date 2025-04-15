@@ -7,7 +7,7 @@ import { BreadcrumbItem } from '@/types';
 
 export const Header = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
     return (
-        <header className="flex h-16 shrink-0 items-center gap-2">
+        <header className="flex h-14 shrink-0 items-center gap-2">
             <div className="flex w-full items-center gap-2 px-4">
                 <SidebarTrigger className="-ml-1" />
                 <Separator orientation="vertical" className="mr-2 h-4" />
