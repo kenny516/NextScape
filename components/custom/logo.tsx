@@ -21,7 +21,11 @@ export default function Logo({ variant = "full", className }: LogoProps) {
                 />
             </div>
             {variant === "full" && (
-                <span className="text-xl">Dashboard</span>
+                <div className="flex flex-col leading-tight">
+                    <span className="text-xl font-extrabold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                        NextScape
+                    </span>
+                </div>
             )}
         </div>
     )
