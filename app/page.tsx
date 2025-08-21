@@ -1,9 +1,7 @@
 
-// the home page of my app is a neutral home page compatible and easy to use with any app
-export default function Home() {
-    return (
-        <div className="">
+import { redirect } from "next/navigation"
 
-        </div>
-    );
+export default function Home() {
+    // Redirect to landing page
+    redirect("/landing")
 }
